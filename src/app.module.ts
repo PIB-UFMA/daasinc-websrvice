@@ -4,13 +4,15 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DoctorsModule } from './doctors/doctors.module';
 import { PatientsModule } from './patients/patients.module';
-
+import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb+srv://oministack10:<password>@cluster0.nizan.mongodb.net/test'),
+    ConfigModule.forRoot(),
+    MongooseModule.forRoot(process.env.DB_STRING),
     DoctorsModule,
     PatientsModule],
   controllers: [AppController],
   providers: [AppService],
 })
+
 export class AppModule { }
