@@ -1,17 +1,19 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Post, Body } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateDoctorDto } from './dto/create-doctor.dto';
 import { UpdateDoctorDto } from './dto/update-doctor.dto';
 import { Doctor, DoctorDocument } from './entities/doctor.entity';
 import { Model } from 'mongoose';
-import { userInfo } from 'os';
+// import {Bo} from '@nestjs/swagger';
+
 
 @Injectable()
 export class DoctorsService {
 
   constructor(@InjectModel(Doctor.name) private doctorModel: Model<DoctorDocument>) { }
 
-  create(createDoctorDto: CreateDoctorDto) {
+  @Post()
+  create(@Body() createDoctorDto: CreateDoctorDto) {
     const doctor = new this.doctorModel(createDoctorDto);
     return doctor.save();
   }
