@@ -1,26 +1,44 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
 import { CreateDoctorDto } from './dto/create-doctor.dto';
 import { UpdateDoctorDto } from './dto/update-doctor.dto';
+import { Doctor, DoctorDocument } from './entities/doctor.entity';
+import { Model } from 'mongoose';
+import { userInfo } from 'os';
 
 @Injectable()
 export class DoctorsService {
+
+  constructor(@InjectModel(Doctor.name) private doctorModel: Model<DoctorDocument>) { }
+
   create(createDoctorDto: CreateDoctorDto) {
-    return 'This action adds a new doctor';
+    const doctor = new this.doctorModel(createDoctorDto);
+    return doctor.save();
   }
 
   findAll() {
-    return `This action returns all doctors`;
+    return this.doctorModel.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} doctor`;
+  findOne(id: string) {
+    return this.doctorModel.findById(id);
   }
 
-  update(id: number, updateDoctorDto: UpdateDoctorDto) {
-    return `This action updates a #${id} doctor`;
+  update(id: string, updateDoctorDto: UpdateDoctorDto) {
+    return this.doctorModel.findByIdAndUpdate(
+      {
+        _id: id,
+      }, {
+      updateDoctorDto,
+    }, {
+      new: true
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} doctor`;
+  remove(id: string) {
+    return this.doctorModel
+      .deleteOne({
+        _id: id,
+      }).exec();
   }
 }
