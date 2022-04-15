@@ -29,7 +29,7 @@ export class DoctorsService {
       {
         _id: id,
       }, {
-      updateDoctorDto,
+      $set: updateDoctorDto,
     }, {
       new: true
     });
